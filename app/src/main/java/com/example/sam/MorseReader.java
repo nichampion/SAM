@@ -1,18 +1,23 @@
-package com.example.sam;
+package com.example.testsam;
 
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
-import android.os.Handler;
+import android.os.Build;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 
-public class MorseReader {
+public class MorseReader<synchronised> {
 
     static void wait(int time_ms) {
-        (new Handler()).postDelayed(null, time_ms);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     // ********** Flash **********
@@ -45,20 +50,28 @@ public class MorseReader {
                 longFlash();
             else if(c == '·')
                 shortFlash();
-            wait(10);
+            else
+                wait(100);
         }
     }
 
     // ********** Vibrator **********
 
+    static void vibrate(int time_ms) {
+        /*Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            v.vibrate(VibrationEffect.createOneShot(time_ms, VibrationEffect.DEFAULT_AMPLITUDE));
+        else
+            v.vibrate(500); //deprecated in API 26
+        wait(time_ms);*/
+    }
+
     static void longVibration() {
-       // Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-       // v.vibrate(500);
+        vibrate(250);
     }
 
     static  void shortVibration() {
-      //  Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-      //  v.vibrate(250);
+        vibrate(125);
     }
 
     public static void vibrator(String chaine) {
@@ -71,7 +84,8 @@ public class MorseReader {
                 longVibration();
             else if(c == '·')
                 shortVibration();
-            wait(10);
+            else
+                wait(100);
         }
     }
 
@@ -79,15 +93,16 @@ public class MorseReader {
 
     static void beep(int time_ms) {
         ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
-        toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, time_ms);
+        toneGen1.startTone(ToneGenerator.TONE_DTMF_1, time_ms);
+        wait(time_ms);
     }
 
     static void longSound() {
-        beep(500);
+        beep(250);
     }
 
     static void shortSound() {
-        beep(250);
+        beep(125);
     }
 
     public static void sound(String chaine) {
@@ -100,7 +115,8 @@ public class MorseReader {
                 longSound();
             else if(c == '·')
                 shortSound();
-            wait(100);
+            else
+                wait(100);
         }
     }
 
